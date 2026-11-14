@@ -26,6 +26,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
+import java.net.SocketTimeoutException
 
 private data class ResolvedMedia(
     val title: String,
@@ -39,8 +40,8 @@ private suspend fun resolveMedia(pageUrl: String): ResolvedMedia =
             .openConnection() as HttpURLConnection)
         try {
             connection.requestMethod = "POST"
-            connection.connectTimeout = 20000
-            connection.readTimeout = 45000
+            connection.connectTimeout = 30000
+            connection.readTimeout = 120000
             connection.doOutput = true
             connection.setRequestProperty("Content-Type", "application/json; charset=utf-8")
             connection.outputStream.use {
@@ -164,6 +165,10 @@ fun LinkPlayerScreen() {
                                     message.contains("confirm you're", true) ||
                                     message.contains("sign in", true)) {
                                     "یوتیوب این درخواست را ربات تشخیص داده است. سرور دریافت لینک نیاز به احراز هویت/راهکار سازگار دارد."
+                                } else if (error is SocketTimeoutException ||
+                                    message.contains("timeout", true) ||
+                                    message.contains("timed out", true)) {
+                                    "سرور برای دریافت لینک بیش از حد زمان برد. لطفاً دوباره تلاش کن؛ اگر تکرار شد، مشکل از دریافت لینک در سرور است."
                                 } else {
                                     "خطا: $message"
                                 }
