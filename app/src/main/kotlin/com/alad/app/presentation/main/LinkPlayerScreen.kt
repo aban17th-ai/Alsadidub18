@@ -17,6 +17,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -155,6 +156,8 @@ fun LinkPlayerScreen() {
                                 if (delaySeconds > 0f) delay((delaySeconds * 1000).toLong())
                                 videoPlayer.playWhenReady = true
                                 status = "${media.title} • در حال پخش"
+                            } catch (error: CancellationException) {
+                                throw error
                             } catch (error: Exception) {
                                 val message = error.message ?: "خطای ناشناخته"
                                 status = if (message.contains("not a bot", true) ||
