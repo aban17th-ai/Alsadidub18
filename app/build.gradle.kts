@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.alad.app"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.alad.app"
