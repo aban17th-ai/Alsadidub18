@@ -62,36 +62,8 @@ class MainActivity : ComponentActivity() {
         val repository = UserPreferencesRepository(applicationContext)
         
         setContent {
-            com.alad.app.ui.theme.ALADTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    var currentScreen by remember { mutableStateOf("MAIN") }
-                    
-                    when (currentScreen) {
-                        "MAIN" -> {
-                            mainViewModel = viewModel(
-                                factory = MainViewModelFactory(repository)
-                            )
-                            MainScreen(
-                                viewModel = mainViewModel,
-                                onNavigateToSettings = { currentScreen = "SETTINGS" },
-                                onConnectClicked = { checkPermissionsAndConnect() },
-                                onDisconnectClicked = { stopDubbingService() }
-                            )
-                        }
-                        "SETTINGS" -> {
-                            val settingsViewModel: SettingsViewModel = viewModel(
-                                factory = SettingsViewModelFactory(repository)
-                            )
-                            SettingsScreen(
-                                viewModel = settingsViewModel,
-                                onBack = { currentScreen = "MAIN" }
-                            )
-                        }
-                    }
-                }
+            MaterialTheme {
+                com.alad.app.presentation.main.LinkPlayerScreen()
             }
         }
     }
